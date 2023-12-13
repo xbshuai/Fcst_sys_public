@@ -20,13 +20,13 @@ a = np.load(data_path + 'LSTM_B3LYP_6-31g.npy')
 b = np.load(data_path + 'LSTM_B3LYP_6-31gs.npy')
 c = np.load(data_path + 'LSTM_B3LYP_6-31pgs.npy')
 
-pic_name = data_path + '/' + "B3LYP" + '.eps'# + "_mol_size"
+pic_name = data_path + '/' + "LSTM_B3LYP_origin" + '.eps'# + "_mol_size"
 # title = "MPNN_" + "B3LYP" #+ "_" + mol_size
 x = np.arange(0, 350)
 # x1 = np.arange(0, 250)
 # plt.title(title)
-plt.xlabel("epoch",fontsize=15)
-plt.ylabel("mre",fontsize=15)
+plt.xlabel("Epoch numbers",fontsize=15)
+plt.ylabel("MRE",fontsize=15)
 plt.ylim((0, 1))
 
 plt.plot(x,a,label='6-31G')
