@@ -1,4 +1,3 @@
-import argparse
 import torch as th
 import torch.nn as nn
 import numpy as np
@@ -8,11 +7,10 @@ from GDataSetTRAIN import TencentAlchemyDataset, batcher
 import os
 import xlsxwriter
 from ModelTool import ModelTool
-import matplotlib.pyplot as plt
 
 th.manual_seed(2)
 
-import basis_set_exchange as bse
+
 #import Magnification
 
 # MPNN class
@@ -348,11 +346,13 @@ class MpnnTool(ModelTool):
         bestEpoch=0
         save_step=10
         y = []
+        y1 = []
         for epoch in range(1,self.config.tra_num_epochs+1):
             w_loss = 0
             err    = 0
             errs   = []
             j      = 0
+            mae = 0.0
             for idx, batch in enumerate(loader):
                 #import pdb
                 #pdb.set_trace()
@@ -381,20 +381,25 @@ class MpnnTool(ModelTool):
                 for i in range(len(reslist)):
                     ares       = reslist[i]
                     time       = timelist[i][0]
-                    single_err = abs(ares-time)/time
-                    err       += single_err
+                    mae_single = abs(ares - time)
+                    mae += mae_single
+                    single_err = abs(ares - time) / time
+                    err += single_err
                     errs.append(single_err)
                     j+=1
 
                 #w_mae += mae.detach().item()
                 w_loss += loss.detach().item()
             #w_mae /= idx + 1
+            mae = mae / j
+            y1.append(mae)
             err_mean=err/j
             errs=np.array(errs)
             variance=errs.var()
             y.append(err_mean)
-            
-            print("Epoch {:2d}, loss: {:.7f}, mre: {:.7f},variance: {:.4f}".format(epoch, w_loss/j, err_mean,variance))
+
+            print("Epoch {:2d}, loss: {:.7f}, mre: {:.7f},variance: {:.4f}, mae:{:.4f}".format(epoch, w_loss / j,
+                                                                                               err_mean, variance, mae))
 
             if epoch%save_step==0:
                 th.save(model,modelName_tmp)
@@ -407,23 +412,27 @@ class MpnnTool(ModelTool):
         print("training done! Best epoch is "+str(bestEpoch))
         print("training done : keep the best model and delete the intermediate models")
         os.remove(modelName_tmp)
-        data_path = os.getcwd() + '/eps/mpnn/size/origin/'
+        data_path = os.getcwd() + '/eps/mpnn/size/improve2/mre/'
         if not os.path.exists(data_path):
             os.makedirs(data_path)
+
+        data_path1 = os.getcwd() + '/eps/mpnn/size/improve2/mae/'
+        if not os.path.exists(data_path1):
+            os.makedirs(data_path1)
         '''
         if self.chemspace == "B3LYP_6-31g":
-            np.save(data_path + 'MPNN_B3LYP_6-31g', y)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31g', y1)
         elif self.chemspace == "B3LYP_6-31gs":
-            np.save(data_path + 'MPNN_B3LYP_6-31gs', y)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31gs', y1)
         else:
-            np.save(data_path + 'MPNN_B3LYP_6-31pgs', y)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31pgs', y1)
         '''
         if mol_size == "small":
-            np.save(data_path + 'MPNN_B3LYP_6-31pgs_small', y)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31pgs_small', y1)
         elif mol_size == "middle":
-            np.save(data_path + 'MPNN_B3LYP_6-31pgs_middle', y)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31pgs_middle', y1)
         else:
-            np.save(data_path + 'MPNN_B3LYP_6-31pgs_large', y)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31pgs_large', y1)
 
         return minMre
 

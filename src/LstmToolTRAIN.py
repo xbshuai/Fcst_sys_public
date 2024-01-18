@@ -431,7 +431,7 @@ class LstmTool(ModelTool):
            os.mkdir("tmp")
         icount = icount_s = icount_m = icount_l = 0
         # The used training suits
-        '''
+
         tmp1="./tmp/train-tmp_s"
         tmp2="./tmp/train-tmp_m"
         tmp3="./tmp/train-tmp_l"
@@ -479,7 +479,7 @@ class LstmTool(ModelTool):
               print(suit, " : ", icount)
         print("Total molecules in training suit : ", icount)
         bnum,bnums,times,slist,names=LstmTool.readData([tmp1],self.sdf_dir,tra_size,self.target,basis=basis)
-
+        '''
         #对smiles分词
         clist=LstmTool.seg(slist)
 
@@ -571,6 +571,7 @@ class LstmTool(ModelTool):
         bestEpoch=0
         modelloc_tmp=self.folder_mod+'/'+ 'lstm_' + self.chemspace + '_tot_tmp.pkl'
         y = []
+        y1 = []
         for epoch in range(1,self.config.tra_num_epochs+1):
             #start=systime.time()
             train_loss=0.0
@@ -607,6 +608,7 @@ class LstmTool(ModelTool):
             tra_maes.append(mae)
             tra_losses.append(train_loss/len_train_data)
             y.append(err)
+            y1.append(mae)
             #end=systime.time()
             #runtime=end-start
             #print("epoch: %d, train loss: %.4f, mre: %.4f, mae:%.4f, time: %.2f"%(epoch+1,train_loss,err,mae,runtime))
@@ -662,24 +664,29 @@ class LstmTool(ModelTool):
         print("trainning completed!")
         print("training done : keep the best model and delete the intermediate models")
         os.remove(modelloc_tmp)
-        data_path = os.getcwd() + '/eps/lstm/base/origin/'
+        data_path = os.getcwd() + '/eps/lstm/size/origin/mre/'
         if not os.path.exists(data_path):
             os.makedirs(data_path)
 
+        data_path1 = os.getcwd() + '/eps/lstm/size/origin/mae/'
+        if not os.path.exists(data_path1):
+            os.makedirs(data_path1)
+
+        '''
         if self.chemspace == "B3LYP_6-31g":
-            np.save(data_path + 'LSTM_B3LYP_6-31g', y)
+            np.save(data_path1 + 'LSTM_B3LYP_6-31g', y1)
         elif self.chemspace == "B3LYP_6-31gs":
-            np.save(data_path + 'LSTM_B3LYP_6-31gs', y)
+            np.save(data_path1 + 'LSTM_B3LYP_6-31gs', y1)
         else:
-            np.save(data_path + 'LSTM_B3LYP_6-31pgs', y)
+            np.save(data_path1 + 'LSTM_B3LYP_6-31pgs', y1)
         '''
         if mol_size == "small":
-            np.save(data_path + 'LSTM_B3LYP_6-31pgs_small', y)
+            np.save(data_path1 + 'LSTM_B3LYP_6-31pgs_small', y1)
         elif mol_size == "middle":
-            np.save(data_path + 'LSTM_B3LYP_6-31pgs_middle', y)
+            np.save(data_path1 + 'LSTM_B3LYP_6-31pgs_middle', y1)
         else:
-            np.save(data_path + 'LSTM_B3LYP_6-31pgs_large', y)
-        '''
+            np.save(data_path1 + 'LSTM_B3LYP_6-31pgs_large', y1)
+
 
         return minMre    
 

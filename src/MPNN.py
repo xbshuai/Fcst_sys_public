@@ -84,7 +84,7 @@ class MPNNModel(nn.Module):
     """MPNN model"""
 
     def __init__(self,
-                 node_input_dim=16,
+                 node_input_dim=22,
                  edge_input_dim=5,
                  output_dim=5,
                  node_hidden_dim=8, # 64

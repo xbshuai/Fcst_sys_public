@@ -35,9 +35,9 @@ sdfsH       = RAW + "/Arxiv1911.05569v1_sdfs_H"
 setsDir     = RAW + "/G09data.3D"
 # Functionals and basis sets, related
 #functionals = ['B3LYP','bhandhlyp','BLYP','CAM-B3LYP','LC-BLYP','M06','M062x','PBE1PBE','wb97xd']
-bases       = ['6-31g','6-31gs','6-31pgs']
+# bases       = ['6-31g','6-31gs','6-31pgs']
 functionals = ['B3LYP']
-# bases       = ['6-31pgs']
+bases       = ['6-31pgs']
 
 # training/validing/testing sets
 # ==> training sets, manual selections for adjusting the training models

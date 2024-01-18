@@ -1,19 +1,16 @@
-import argparse
 import torch as th
 import torch.nn as nn
 import numpy as np
 from MGCN import MGCNModel
 from torch.utils.data import DataLoader
-from GDataSetTRAIN import TencentAlchemyDataset, batcher
+from Fcst_sys_public.src.GDataSetTRAIN import TencentAlchemyDataset, batcher
 import os
 import xlsxwriter
 from ModelTool import ModelTool
-import matplotlib.pyplot as plt
-
 
 th.manual_seed(2)
 
-import basis_set_exchange as bse
+
 #import Magnification
 
 # MGCN class

@@ -109,7 +109,7 @@ class TencentAlchemyDataset(Dataset):
                           Chem.rdchem.HybridizationType.SP3)
             ]
             h_u.append(num_h)
-            # h_u.extend(bnum_q[u])
+            h_u.extend(bnum_q[u])
             
             atom_feats_dict['n_feat'].append(torch.FloatTensor(h_u))
             
