@@ -27,12 +27,12 @@ import Configs
 
 # ==> parameters to be used (IO later) 
 # ML models, related
-ML_models   =  ["LSTM"]
+ML_models   =  ["MPNN"]
 TR_para     =  [25,350,50,0.01,1.0,2] # [NtrainSet,Nepoch,BatchSize,LRstep,TrainRatio,ValidInt]
-TRM_dir      = PWD + "/database/P38-models"
+TRM_dir      = PWD + "/database/training-models"
 # SDFs and Crawled folder, related
-sdfsH       = PWD+ "/updatedSDFs"
-setsDir     = RAW + "/P38data.updated1"
+sdfsH       = RAW+ "/Arxiv1911.05569v1_sdfs_H"
+setsDir     = RAW + "/G09data.01.updated"
 # Functionals and basis sets, related
 #functionals = ['B3LYP','bhandhlyp','BLYP','CAM-B3LYP','LC-BLYP','M06','M062x','PBE1PBE','wb97xd']
 # bases       = ['6-31g','6-31gs','6-31pgs']
@@ -59,6 +59,7 @@ suits_valid.append("Gaussian_inputs_validing")
 suits_valid.append("Gaussian_inputs_validing2")
 #suits_valid.append("Gaussian_inputs_testing")
 #suits_valid.append("Gaussian_inputs_testing2")
+'''
 train_tmp = [setsDir + "/train2.dat"]
 valid_tmp = [setsDir + "/valid2.dat"]
 TR_dir = TRM_dir + "/" + ML_models[0]
@@ -89,7 +90,7 @@ for mod in ML_models:    # models
 
          # Training and evaluating
          Models.TrainAndEval(TR_para=TR_para,TR_dir=TR_dir,chemspace=chemspace,folder_sdf=sdfsH,suits_train=train_tmp,suits_valid=valid_tmp,setsDir=setsDir,model=mod)
-'''
+
 
 print("All the models have been trained evaluated")
 

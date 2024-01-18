@@ -31,6 +31,7 @@ class ModelTool(metaclass=abc.ABCMeta):
             self.device=th.device('cpu')
 
 
+
     def gen_learning_curve(self,tra_losses,tra_mres,tra_maes,val_losses,val_mres,val_maes):
         '''
         生成学习曲线图并保存

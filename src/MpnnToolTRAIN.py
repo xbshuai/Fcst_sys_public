@@ -348,13 +348,16 @@ class MpnnTool(ModelTool):
         modelName_tmp = self.folder_mod + '/' + 'mpnn_' + self.chemspace + '_' + targetName + '_tmp.pkl'
 
         minMre=100.0
+
         bestEpoch=0
         save_step=10
+        y = []
         y_1 = []
         y_2 = []
         for epoch in range(1,self.config.tra_num_epochs+1):
             w_loss = 0
             err    = 0
+            mae = 0.0
             errs   = []
             j      = 0
             for idx, batch in enumerate(loader):
@@ -385,6 +388,8 @@ class MpnnTool(ModelTool):
                 for i in range(len(reslist)):
                     ares       = reslist[i]
                     time       = timelist[i][0]
+                    mae_single = abs(ares-time)
+                    mae += mae_single
                     single_err = abs(ares-time)/time
                     err       += single_err
                     errs.append(single_err)
@@ -393,12 +398,14 @@ class MpnnTool(ModelTool):
                 #w_mae += mae.detach().item()
                 w_loss += loss.detach().item()
             #w_mae /= idx + 1
+            mae = mae / j
+            y.append(mae)
             err_mean=err/j
             errs=np.array(errs)
             variance=errs.var()
             y_2.append(err_mean)
             
-            print("Epoch {:2d}, loss: {:.7f}, mre: {:.7f},variance: {:.4f}".format(epoch, w_loss/j, err_mean,variance))
+            print("Epoch {:2d}, loss: {:.7f}, mre: {:.7f},variance: {:.4f}, mae:{:.4f}".format(epoch, w_loss/j, err_mean,variance, mae))
 
             if epoch%save_step==0:
                 th.save(model,modelName_tmp)
@@ -412,26 +419,30 @@ class MpnnTool(ModelTool):
         print("training done! Best epoch is "+str(bestEpoch))
         print("training done : keep the best model and delete the intermediate models")
         os.remove(modelName_tmp)
-        data_path = os.getcwd() + '/eps/mpnn/P38/improve1/'
+        data_path = os.getcwd() + '/eps/mpnn/size/improve1/mre/'
+        data_path1 = os.getcwd() + '/eps/mpnn/size/improve1/mae/'
         if not os.path.exists(data_path):
             os.makedirs(data_path)
+        if not os.path.exists(data_path1):
+            os.makedirs(data_path1)
 
+        '''
         if self.chemspace == "B3LYP_6-31g":
-            np.save(data_path + 'MPNN_B3LYP_6-31g', y_2)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31g', y)
         elif self.chemspace == "B3LYP_6-31gs":
-            np.save(data_path + 'MPNN_B3LYP_6-31gs', y_2)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31gs', y)
         elif self.chemspace == "B3LYP_6-31pgs":
-            np.save(data_path + 'MPNN_B3LYP_6-31pgs', y_2)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31pgs', y)
         else:
-            np.save(data_path + 'MPNN_P38_631gss2', y_2)
+            np.save(data_path1 + 'MPNN_P38_631gss2', y)
         '''
         if mol_size == "small":
-            np.save(data_path + 'MPNN_B3LYP_6-31pgs_small', y_2)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31pgs_small', y)
         elif mol_size == "middle":
-            np.save(data_path + 'MPNN_B3LYP_6-31pgs_middle', y_2)
+            np.save(data_path1 + 'MPNN_B3LYP_6-31pgs_middle', y)
         else:
-            np.save(data_path + 'MPNN_B3LYP_6-31pgs_large', y_2)
-        '''
+            np.save(data_path1 + 'MPNN_B3LYP_6-31pgs_large', y)
+
         return minMre
 
 

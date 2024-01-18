@@ -20,13 +20,13 @@ def ModelLoad(model,BAK,ref_chemspace,QC_packages,Machines):
    # modelName0=BAK+"/"+QC_packages+"_"+Machines+"_"+ref_chemspace
    modelName0 = BAK + "/" + model
    if model=="MPNN":       
-      # modelName1="/mpnn_"+ref_chemspace+"_tot.pkl"
-      modelName1 = "/mpnn_P38_631gss_tot.pkl"
+      modelName1="/mpnn_"+ref_chemspace+"_tot.pkl"
+      # modelName1 = "/mpnn_P38_631gss_tot.pkl"
    elif model=="MGCN":       
       modelName1="/mgcn_"+ref_chemspace+"_tot.pkl"
    elif model=="LSTM":       
-      # modelName1="/lstm_"+ref_chemspace+"_tot.pkl"
-      modelName1 = "/lstm_P38_631gss_tot.pkl"
+      modelName1="/lstm_"+ref_chemspace+"_tot.pkl"
+      # modelName1 = "/lstm_P38_631gss_tot.pkl"
    elif model=="RF":       
       modelName1="/rfmodel_tot"
       
@@ -46,7 +46,7 @@ def TrainAndEval(TR_para,TR_dir,chemspace,folder_sdf,suits_train,suits_valid,set
       import MpnnToolTRAIN 
       
       tool=MpnnToolTRAIN.MpnnTool(chemspace=chemspace, config=config, suits1=suits_train, suits2=suits_valid, folder_sdf=folder_sdf, folder_mod=TR_dir, target=aimming)
-      '''
+
       for i in range(3):
          if i == 0:
             tool.train(path=setsDir,mol_size = "small")
@@ -56,6 +56,7 @@ def TrainAndEval(TR_para,TR_dir,chemspace,folder_sdf,suits_train,suits_valid,set
             tool.train(path=setsDir,mol_size = "large")
       '''
       tool.train(path=setsDir)
+      '''
 
    elif model=="MGCN":
       import MgcnToolTRAIN 
@@ -75,7 +76,7 @@ def TrainAndEval(TR_para,TR_dir,chemspace,folder_sdf,suits_train,suits_valid,set
       import LstmToolTRAIN 
       tool=LstmToolTRAIN.LstmTool(chemspace=chemspace, config=config, suits1=suits_train, suits2=suits_valid, folder_sdf=folder_sdf, folder_mod=TR_dir, target=aimming)
 
-      '''
+
       for i in range(3):
          if i == 0:
             tool.train(path=setsDir,mol_size = "small")
@@ -85,7 +86,7 @@ def TrainAndEval(TR_para,TR_dir,chemspace,folder_sdf,suits_train,suits_valid,set
             tool.train(path=setsDir,mol_size = "large")
       '''
       tool.train(path=setsDir)
-
+      '''
 
    elif model=="RF":
       import RfToolTRAIN
